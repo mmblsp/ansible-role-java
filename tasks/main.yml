@@ -1,0 +1,15 @@
+---
+# tasks file for java
+- name: Getcher facts
+  setup:
+    filter: ansible_distribution
+  when: ansible_facts['distribution'] is undefined
+
+- name: include default step variables
+  include_vars: "{{ ansible_facts['distribution']|lower|regex_search('^\\S+') }}.yml"
+
+- name: Install {{ java_package_name }}
+  package:
+    name: "{{ java_package_name }}"
+    state: present
+  become: true
